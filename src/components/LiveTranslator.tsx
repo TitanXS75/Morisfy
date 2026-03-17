@@ -21,7 +21,12 @@ export function LiveTranslator({ inputText, setInputText }: LiveTranslatorProps)
   }, [morseOutput]);
 
   const handlePlay = useCallback(async () => {
-    if (!morseOutput || playing) return;
+    if (playing) {
+      stopMorseAudio();
+      setPlaying(false);
+      return;
+    }
+    if (!morseOutput) return;
     setPlaying(true);
     await playMorseAudio(morseOutput);
     setPlaying(false);
