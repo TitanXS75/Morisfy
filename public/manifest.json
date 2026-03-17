@@ -1,16 +1,40 @@
 {
-  "name": "Morsify",
+  "name": "Morsify — Morse Code Translator & BLE Transmitter",
   "short_name": "Morsify",
-  "description": "Morse Code Translator & BLE Transmitter",
+  "description": "A modern Morse code learning and communication tool with Web Audio playback and Bluetooth transmission. Works offline.",
   "start_url": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "theme_color": "#f5a623",
   "background_color": "#0a0a0f",
+  "scope": "/",
+  "categories": ["education", "utilities", "communication"],
+  "lang": "en",
   "icons": [
     {
       "src": "/favicon.svg",
       "sizes": "any",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "32x32 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/placeholder.svg",
+      "sizes": "1280x720",
+      "type": "image/svg+xml",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/placeholder.svg", 
+      "sizes": "640x1136",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
     }
   ]
 }

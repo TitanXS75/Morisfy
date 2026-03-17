@@ -19,8 +19,8 @@ const TABS: { id: Tab; label: string }[] = [
 
 const Index = () => {
   const [inputText, setInputText] = useState('');
-  const [bleState, setBleState] = useState<BleState>('off');
   const [activeTab, setActiveTab] = useState<Tab>('translate');
+  const [bleState, setBleState] = useState<BleState>('off');
 
   const morseOutput = encodeToMorse(inputText);
 
@@ -30,7 +30,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <MorsifyHeader bleState={bleState} />
+      <MorsifyHeader />
 
       {/* Tab Navigation */}
       <nav className="px-4 md:px-6 py-3 md:py-4 border-b border-border animate-fade-up overflow-x-auto scrollbar-hide" style={{ animationDelay: '0.05s' }}>
