@@ -7,9 +7,12 @@
     <meta name="description" content="MORSIFY: A modern Morse code learning and communication tool with Web Audio playback and Bluetooth transmission. Works offline." />
     <meta name="author" content="Morsify" />
     <meta name="theme-color" content="#0a0a0f" />
+    <meta name="msapplication-TileColor" content="#0a0a0f" />
+    <meta name="msapplication-navbutton-color" content="#0a0a0f" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Morsify" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
     <meta property="og:title" content="Morsify — Morse Code Translator" />
     <meta property="og:description" content="Signal the world. No internet needed. Translate, play, and transmit Morse code." />
@@ -19,10 +22,17 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
 
-  <body>
+  <body style="margin: 0; padding: 0; background: #0a0a0f; color: #f5a623; font-family: 'Rajdhani', sans-serif;">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
+      // Fallback if CSS fails to load
+      setTimeout(() => {
+        if (!document.querySelector('link[href*="index"]')) {
+          console.warn('CSS may not be loaded properly');
+        }
+      }, 3000);
+      
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js').catch(() => {});
       }

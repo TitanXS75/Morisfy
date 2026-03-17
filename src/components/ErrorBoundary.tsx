@@ -21,17 +21,29 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error('Error caught by boundary:', error, errorInfo);
+    // Also log to any error reporting service here
   }
 
   render() {
     if (this.state.hasError) {
+      console.error('Rendering error state:', this.state.error);
       return (
         <div className="flex min-h-screen items-center justify-center bg-background">
-          <div className="text-center p-6">
+          <div className="text-center p-6 max-w-md">
             <h1 className="mb-4 text-2xl font-bold text-primary">Something went wrong</h1>
             <p className="mb-4 text-muted-foreground">
               {this.state.error?.message || 'An unexpected error occurred'}
             </p>
+            {this.state.error && (
+              <details className="mb-4 text-left">
+                <summary className="cursor-pointer text-xs text-muted-foreground">
+                  Technical Details
+                </summary>
+                <pre className="mt-2 p-2 bg-muted rounded text-xs overflow-auto">
+                  {this.state.error.stack}
+                </pre>
+              </details>
+            )}
             <button
               onClick={() => window.location.reload()}
               className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90"
