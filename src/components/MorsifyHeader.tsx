@@ -1,12 +1,13 @@
 import { SignalPulse } from './SignalPulse';
+import { BleStatus } from './BleStatus';
 
 interface MorsifyHeaderProps {
-  bleState?: 'off' | 'scanning' | 'connected';
+  bleState: 'off' | 'scanning' | 'connected';
 }
 
 export function MorsifyHeader({ bleState }: MorsifyHeaderProps) {
   return (
-    <header className="flex items-center px-4 md:px-6 py-4 md:py-5 border-b border-border animate-fade-up gap-3">
+    <header className="flex items-center justify-between px-4 md:px-6 py-4 md:py-5 border-b border-border animate-fade-up gap-3">
       <div className="flex items-center gap-3 min-w-0">
         <SignalPulse />
         <div>
@@ -18,6 +19,7 @@ export function MorsifyHeader({ bleState }: MorsifyHeaderProps) {
           </p>
         </div>
       </div>
+      <BleStatus state={bleState} />
     </header>
   );
 }
