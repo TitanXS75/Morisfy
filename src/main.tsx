@@ -2,8 +2,12 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 
+console.log('main.tsx loaded');
+
 // Add loading indicator
 const rootElement = document.getElementById("root");
+console.log('Root element found:', !!rootElement);
+
 if (!rootElement) {
   throw new Error("Root element not found");
 }
@@ -26,12 +30,15 @@ rootElement.innerHTML = `
   </div>
 `;
 
-const root = createRoot(rootElement);
-root.render(<App />);
+console.log('Loading state set');
 
-// Add error handling
-window.addEventListener('error', (event) => {
-  console.error('Global error:', event.error);
+try {
+  const root = createRoot(rootElement);
+  console.log('React root created');
+  root.render(<App />);
+  console.log('App rendered');
+} catch (error) {
+  console.error('Error rendering app:', error);
   rootElement.innerHTML = `
     <div style="
       display: flex;
@@ -45,8 +52,8 @@ window.addEventListener('error', (event) => {
       padding: 2rem;
     ">
       <div>
-        <h2 style="margin-bottom: 1rem;">APP ERROR</h2>
-        <p style="font-size: 0.9rem; opacity: 0.8;">Please refresh the page</p>
+        <h2 style="margin-bottom: 1rem;">RENDER ERROR</h2>
+        <p style="font-size: 0.9rem; opacity: 0.8;">${error.message}</p>
         <button onclick="window.location.reload()" style="
           margin-top: 1rem;
           padding: 0.5rem 1rem;
@@ -61,4 +68,4 @@ window.addEventListener('error', (event) => {
       </div>
     </div>
   `;
-});
+}
