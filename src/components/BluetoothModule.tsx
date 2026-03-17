@@ -43,7 +43,7 @@ export function BluetoothModule({ morseOutput, bleState, setBleState }: Bluetoot
     try {
       setBleState('scanning');
       addLog('Scanning for BLE devices...', 'info');
-      const device = await navigator.bluetooth.requestDevice({
+      const device = await (navigator as any).bluetooth.requestDevice({
         filters: [{ services: [UART_SERVICE] }],
         optionalServices: [UART_SERVICE],
       });
