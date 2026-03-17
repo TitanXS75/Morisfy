@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { encodeToMorse, toDisplayMorse, playMorseAudio } from '@/lib/morse';
+import { encodeToMorse, toDisplayMorse, playMorseAudio, stopMorseAudio } from '@/lib/morse';
 
 interface LiveTranslatorProps {
   inputText: string;
