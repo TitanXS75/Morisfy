@@ -41,14 +41,30 @@ export function toDisplayMorse(morse: string): string {
 }
 
 let audioCtx: AudioContext | null = null;
+let currentAbort: AbortController | null = null;
 
 function getAudioContext(): AudioContext {
   if (!audioCtx) audioCtx = new AudioContext();
   return audioCtx;
 }
 
-export async function playMorseAudio(morse: string, onSymbol?: (i: number) => void): Promise<void> {
+export function stopMorseAudio(): void {
+  if (currentAbort) {
+    currentAbort.abort();
+    currentAbort = null;
+  }
+  if (audioCtx) {
+    audioCtx.close();
+    audioCtx = null;
+  }
+}
+
+export async function playMorseAudio(morse: string): Promise<void> {
+  stopMorseAudio();
   const ctx = getAudioContext();
+  const abort = new AbortController();
+  currentAbort = abort;
+
   const DOT = 0.08;
   const DASH = 0.24;
   const SYMBOL_GAP = 0.08;
@@ -89,9 +105,17 @@ export async function playMorseAudio(morse: string, onSymbol?: (i: number) => vo
     }
   }
 
-  // Wait for playback to finish
   const duration = (time - ctx.currentTime) * 1000;
-  return new Promise(resolve => setTimeout(resolve, duration));
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      currentAbort = null;
+      resolve();
+    }, duration);
+    abort.signal.addEventListener('abort', () => {
+      clearTimeout(timer);
+      resolve();
+    });
+  });
 }
 
 export function playLetterAudio(letter: string): void {

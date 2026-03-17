@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { encodeToMorse, toDisplayMorse, playMorseAudio } from '@/lib/morse';
+import { encodeToMorse, toDisplayMorse, playMorseAudio, stopMorseAudio } from '@/lib/morse';
 
 interface LiveTranslatorProps {
   inputText: string;
@@ -21,7 +21,12 @@ export function LiveTranslator({ inputText, setInputText }: LiveTranslatorProps)
   }, [morseOutput]);
 
   const handlePlay = useCallback(async () => {
-    if (!morseOutput || playing) return;
+    if (playing) {
+      stopMorseAudio();
+      setPlaying(false);
+      return;
+    }
+    if (!morseOutput) return;
     setPlaying(true);
     await playMorseAudio(morseOutput);
     setPlaying(false);
@@ -95,10 +100,14 @@ export function LiveTranslator({ inputText, setInputText }: LiveTranslatorProps)
           </button>
           <button
             onClick={handlePlay}
-            disabled={!morseOutput || playing}
-            className="px-6 py-2.5 border border-border text-foreground font-display font-bold text-sm tracking-wider rounded-lg hover:border-primary hover:text-primary transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed active:scale-95 flex items-center gap-2"
+            disabled={!morseOutput && !playing}
+            className={`px-6 py-2.5 font-display font-bold text-sm tracking-wider rounded-lg transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed active:scale-95 flex items-center gap-2 ${
+              playing
+                ? 'bg-destructive text-destructive-foreground border border-destructive'
+                : 'border border-border text-foreground hover:border-primary hover:text-primary'
+            }`}
           >
-            {playing ? '♪ PLAYING...' : '🔊 PLAY AUDIO'}
+            {playing ? '⏹ STOP' : '🔊 PLAY AUDIO'}
           </button>
           <button
             onClick={handleClear}

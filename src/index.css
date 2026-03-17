@@ -85,6 +85,14 @@
     background: hsla(36, 90%, 55%, 0.3);
     border-radius: 3px;
   }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @layer components {

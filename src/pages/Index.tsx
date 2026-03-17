@@ -33,8 +33,8 @@ const Index = () => {
       <MorsifyHeader bleState={bleState} />
 
       {/* Tab Navigation */}
-      <nav className="px-6 py-4 border-b border-border animate-fade-up" style={{ animationDelay: '0.05s' }}>
-        <div className="max-w-5xl mx-auto flex gap-2">
+      <nav className="px-4 md:px-6 py-3 md:py-4 border-b border-border animate-fade-up overflow-x-auto scrollbar-hide" style={{ animationDelay: '0.05s' }}>
+        <div className="max-w-5xl mx-auto flex gap-2 min-w-max">
           {TABS.map(tab => (
             <button
               key={tab.id}
