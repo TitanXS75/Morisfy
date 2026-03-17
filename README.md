@@ -56,7 +56,7 @@ npm run preview
 - ✅ **Chrome/Edge/Opera on Desktop** - Complete BLE functionality
 
 ### Limited Support
-- ⚠️ **Safari/Firefox** - No Web Bluetooth support (Demo mode available)
+- ⚠️ **Safari/Firefox** - No Web Bluetooth support
 - ⚠️ **Other browsers** - Basic translation features only
 
 ### Requirements
@@ -126,14 +126,6 @@ The app uses standard Nordic UART Service:
 - **UART Service**: `6E400001-B5A3-F393-E0A9-E50E24DCCA9E`
 - **TX Characteristic**: `6E400002-B5A3-F393-E0A9-E50E24DCCA9E`
 - **RX Characteristic**: `6E400003-B5A3-F393-E0A9-E50E24DCCA9E`
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🌟 Acknowledgments
 
