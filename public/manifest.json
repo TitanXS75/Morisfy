@@ -1,0 +1,16 @@
+{
+  "name": "Morsify",
+  "short_name": "Morsify",
+  "description": "Morse Code Translator & BLE Transmitter",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#f5a623",
+  "background_color": "#0a0a0f",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
