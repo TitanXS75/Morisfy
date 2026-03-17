@@ -19,12 +19,15 @@ const UART_SERVICE = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
 const UART_TX = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
 const UART_RX = '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
 
-const isBleSupported = typeof navigator !== 'undefined' && 'bluetooth' in navigator;
+const isBleSupported = typeof navigator !== 'undefined' && 
+  'bluetooth' in navigator && 
+  typeof (navigator as any).bluetooth.requestDevice === 'function';
 
 export function BluetoothModule({ morseOutput, bleState, setBleState }: BluetoothModuleProps) {
   const [deviceName, setDeviceName] = useState('');
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [receivedText, setReceivedText] = useState('');
+  const [demoMode, setDemoMode] = useState(false);
   const txCharRef = useRef<any>(null);
   const deviceRef = useRef<any>(null);
   const logEndRef = useRef<HTMLDivElement>(null);
@@ -39,14 +42,29 @@ export function BluetoothModule({ morseOutput, bleState, setBleState }: Bluetoot
   }, [logs]);
 
   const handleScan = useCallback(async () => {
-    if (!isBleSupported) return;
+    if (!isBleSupported) {
+      addLog('Web Bluetooth not supported in this browser', 'error');
+      return;
+    }
+    
     try {
       setBleState('scanning');
       addLog('Scanning for BLE devices...', 'info');
+      
+      // Check if we're in a secure context
+      if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+        throw new Error('Web Bluetooth requires HTTPS or localhost');
+      }
+      
       const device = await (navigator as any).bluetooth.requestDevice({
         filters: [{ services: [UART_SERVICE] }],
         optionalServices: [UART_SERVICE],
       });
+      
+      if (!device) {
+        throw new Error('No device selected');
+      }
+      
       deviceRef.current = device;
       setDeviceName(device.name || 'Unknown Device');
       addLog(`Found: ${device.name || 'Unknown'}`, 'info');
@@ -80,26 +98,68 @@ export function BluetoothModule({ morseOutput, bleState, setBleState }: Bluetoot
       addLog('Connected!', 'info');
     } catch (err: any) {
       setBleState('off');
-      addLog(err.message || 'Connection failed', 'error');
+      
+      // Provide user-friendly error messages
+      let errorMessage = err.message || 'Connection failed';
+      if (err.name === 'NotFoundError') {
+        errorMessage = 'No BLE devices found with UART service';
+      } else if (err.name === 'NetworkError') {
+        errorMessage = 'BLE device not reachable or connection failed';
+      } else if (err.name === 'SecurityError') {
+        errorMessage = 'Permission denied or not in secure context';
+      } else if (err.name === 'AbortError') {
+        errorMessage = 'Device selection cancelled';
+      }
+      
+      addLog(errorMessage, 'error');
     }
   }, [setBleState, addLog]);
 
   const handleDisconnect = useCallback(() => {
-    deviceRef.current?.gatt?.disconnect();
+  if (demoMode) {
+    setDemoMode(false);
     setBleState('off');
-    txCharRef.current = null;
-  }, [setBleState]);
+    setDeviceName('');
+    addLog('Demo mode deactivated', 'info');
+    return;
+  }
+  
+  deviceRef.current?.gatt?.disconnect();
+  setBleState('off');
+  txCharRef.current = null;
+}, [demoMode, setBleState]);
 
   const handleTransmit = useCallback(async () => {
-    if (!txCharRef.current || !morseOutput) return;
-    try {
-      const encoder = new TextEncoder();
-      await txCharRef.current.writeValue(encoder.encode(morseOutput));
-      addLog(`TX: ${morseOutput}`, 'sent');
-    } catch (err: any) {
-      addLog(`TX Error: ${err.message}`, 'error');
-    }
-  }, [morseOutput, addLog]);
+  if (!txCharRef.current || !morseOutput) return;
+  
+  if (demoMode) {
+    // Demo mode: simulate transmission
+    addLog(`TX: ${morseOutput}`, 'sent');
+    addLog('Demo: Signal transmitted successfully', 'info');
+    return;
+  }
+  
+  try {
+    const encoder = new TextEncoder();
+    await txCharRef.current.writeValue(encoder.encode(morseOutput));
+    addLog(`TX: ${morseOutput}`, 'sent');
+  } catch (err: any) {
+    addLog(`TX Error: ${err.message}`, 'error');
+  }
+}, [morseOutput, addLog, demoMode]);
+
+const handleDemoMode = useCallback(() => {
+  setDemoMode(!demoMode);
+  if (!demoMode) {
+    setBleState('connected');
+    setDeviceName('Demo Device (Simulated)');
+    addLog('Demo mode activated', 'info');
+  } else {
+    setBleState('off');
+    setDeviceName('');
+    addLog('Demo mode deactivated', 'info');
+  }
+}, [demoMode, setBleState]);
 
   return (
     <section className="px-6 py-10 animate-fade-up" style={{ animationDelay: '0.3s' }}>
@@ -110,10 +170,35 @@ export function BluetoothModule({ morseOutput, bleState, setBleState }: Bluetoot
 
         {!isBleSupported ? (
           <div className="glass-card p-6 text-center">
-            <p className="font-display text-muted-foreground">
-              ⚠ Web Bluetooth is not supported in this browser.<br />
-              Use <span className="text-accent">Chrome on Android or desktop</span> for BLE support.
+            <p className="font-display text-muted-foreground mb-4">
+              ⚠ Web Bluetooth is not supported in this browser.
             </p>
+            <div className="space-y-2 text-sm text-muted-foreground mb-4">
+              <p>📱 <strong>Chrome on Android</strong> - Full support</p>
+              <p>💻 <strong>Chrome/Edge/Opera on desktop</strong> - Full support</p>
+              <p>🚫 <strong>Safari/Firefox</strong> - Not supported</p>
+              <p>🔒 <strong>Requires HTTPS</strong> and user gesture</p>
+            </div>
+            <div className="mt-4 p-3 bg-muted/50 rounded-lg mb-4">
+              <p className="text-xs font-mono">
+                Tip: Use Chrome on desktop for testing with BLE simulators
+              </p>
+            </div>
+            <button
+              onClick={handleDemoMode}
+              className={`px-6 py-2.5 font-display font-bold text-sm tracking-wider rounded-lg transition-all duration-200 active:scale-95 ${
+                demoMode 
+                  ? 'bg-destructive text-destructive-foreground' 
+                  : 'bg-accent text-accent-foreground glow-cyan hover:opacity-90'
+              }`}
+            >
+              {demoMode ? 'EXIT DEMO MODE' : 'TRY DEMO MODE'}
+            </button>
+            {demoMode && (
+              <p className="text-xs text-muted-foreground mt-2">
+                Simulated Bluetooth for testing the interface
+              </p>
+            )}
           </div>
         ) : (
           <div className="glass-card p-6 space-y-5">
@@ -136,6 +221,11 @@ export function BluetoothModule({ morseOutput, bleState, setBleState }: Bluetoot
                       <span className="w-1 h-5 bg-success rounded-sm" />
                     </span>
                     {deviceName}
+                    {demoMode && (
+                      <span className="text-xs bg-accent/20 px-2 py-1 rounded text-accent">
+                        DEMO
+                      </span>
+                    )}
                   </div>
                   <button
                     onClick={handleTransmit}
