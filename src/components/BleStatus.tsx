@@ -19,7 +19,7 @@ export function BleStatus({ state }: BleStatusProps) {
   }[state];
 
   return (
-    <div className={`px-3 py-1.5 rounded-full border text-xs font-display font-bold tracking-wider ${config.classes}`}>
+    <div className={`px-2.5 md:px-3 py-1 md:py-1.5 rounded-full border text-[10px] md:text-xs font-display font-bold tracking-wider whitespace-nowrap shrink-0 ${config.classes}`}>
       {config.label}
     </div>
   );
