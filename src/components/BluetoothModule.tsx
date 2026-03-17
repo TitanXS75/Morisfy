@@ -25,8 +25,8 @@ export function BluetoothModule({ morseOutput, bleState, setBleState }: Bluetoot
   const [deviceName, setDeviceName] = useState('');
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [receivedText, setReceivedText] = useState('');
-  const txCharRef = useRef<BluetoothRemoteGATTCharacteristic | null>(null);
-  const deviceRef = useRef<BluetoothDevice | null>(null);
+  const txCharRef = useRef<any>(null);
+  const deviceRef = useRef<any>(null);
   const logEndRef = useRef<HTMLDivElement>(null);
 
   const addLog = useCallback((message: string, type: LogEntry['type']) => {
