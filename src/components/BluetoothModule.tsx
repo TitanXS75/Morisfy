@@ -66,7 +66,7 @@ export function BluetoothModule({ morseOutput, bleState, setBleState }: Bluetoot
         const rxChar = await service.getCharacteristic(UART_RX);
         await rxChar.startNotifications();
         rxChar.addEventListener('characteristicvaluechanged', (event: Event) => {
-          const target = event.target as BluetoothRemoteGATTCharacteristic;
+          const target = event.target as any;
           const value = new TextDecoder().decode(target.value);
           addLog(`RX: ${value}`, 'received');
           const decoded = decodeFromMorse(value);
