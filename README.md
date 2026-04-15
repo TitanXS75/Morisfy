@@ -10,12 +10,6 @@ A modern, feature-rich Morse code learning and communication tool with Web Audio
 - **Interactive Alphabet Grid** - Visual reference for learning Morse code patterns
 - **Live Decoder** - Decode Morse code signals in real-time
 
-### 📡 Bluetooth Transmission
-- **Web Bluetooth Support** - Connect to BLE devices for wireless Morse transmission
-- **UART Service Compatible** - Works with Nordic UART Service (6E400001-B5A3-F393-E0A9-E50E24DCCA9E)
-- **Demo Mode** - Test functionality in browsers without Web Bluetooth support
-- **Cross-browser Compatibility** - Enhanced support with fallbacks for all modern browsers
-
 ### 🎨 Modern UI/UX
 - **Responsive Design** - Works seamlessly on desktop, tablet, and mobile devices
 - **Dark Theme** - Easy on the eyes with beautiful glass morphism effects
