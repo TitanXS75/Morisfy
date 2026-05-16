@@ -20,7 +20,7 @@ A modern, feature-rich Morse code learning and communication tool with Web Audio
 
 ### Prerequisites
 - Node.js 18+ 
-- Modern web browser (Chrome/Edge/Opera recommended for full BLE support)
+- Modern web browser (Chrome/Edge)
 
 ### Installation
 
@@ -45,18 +45,7 @@ npm run preview
 
 ## 📱 Browser Compatibility
 
-### Full Support
-- ✅ **Chrome on Android** - Complete BLE functionality
-- ✅ **Chrome/Edge/Opera on Desktop** - Complete BLE functionality
-
-### Limited Support
-- ⚠️ **Safari/Firefox** - No Web Bluetooth support
-- ⚠️ **Other browsers** - Basic translation features only
-
-### Requirements
-- 🔒 **HTTPS** required for Web Bluetooth (localhost works for development)
-- 👆 **User gesture** required for device pairing
-- 📡 **BLE device** with UART service for transmission
+- ⌨️ **Browsers** - Basic translation features only
 
 ## 🎮 Usage
 
@@ -66,19 +55,6 @@ npm run preview
 3. Play audio to hear the Morse code
 4. Use the alphabet grid for reference
 
-### Bluetooth Transmission
-1. Navigate to the **TRANSMIT** tab
-2. Click **SCAN FOR DEVICES** (or **TRY DEMO MODE** in unsupported browsers)
-3. Select your BLE device
-4. Type your message and click **TRANSMIT MORSE**
-5. Monitor the transmission log for status
-
-### Demo Mode
-For browsers without Web Bluetooth support, enable **Demo Mode** to:
-- Test the interface and user flow
-- Simulate device connection
-- Practice transmission workflow
-
 ## 🛠️ Tech Stack
 
 - **React 18** - Modern component-based UI
@@ -86,7 +62,6 @@ For browsers without Web Bluetooth support, enable **Demo Mode** to:
 - **Vite** - Fast development and building
 - **Tailwind CSS** - Utility-first styling
 - **Radix UI** - Accessible component primitives
-- **Web Bluetooth API** - BLE device communication
 - **Web Audio API** - Morse code synthesis
 
 ## 📂 Project Structure
@@ -94,7 +69,6 @@ For browsers without Web Bluetooth support, enable **Demo Mode** to:
 ```
 src/
 ├── components/
-│   ├── BluetoothModule.tsx    # BLE transmission functionality
 │   ├── LiveTranslator.tsx      # Real-time translation
 │   ├── AlphabetGrid.tsx        # Interactive learning grid
 │   ├── MorseDecoder.tsx        # Morse code decoder
@@ -115,14 +89,7 @@ src/
 - `npm run lint` - Run ESLint
 - `npm run test` - Run tests
 
-### BLE Service Configuration
-The app uses standard Nordic UART Service:
-- **UART Service**: `6E400001-B5A3-F393-E0A9-E50E24DCCA9E`
-- **TX Characteristic**: `6E400002-B5A3-F393-E0A9-E50E24DCCA9E`
-- **RX Characteristic**: `6E400003-B5A3-F393-E0A9-E50E24DCCA9E`
-
 ## 🌟 Acknowledgments
 
 - Built with modern web technologies for cross-platform compatibility
 - Inspired by the need for accessible Morse code learning tools
-- Enhanced with Web Bluetooth for real-world communication applications
